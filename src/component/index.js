@@ -64,7 +64,10 @@ class App extends Component {
         return interval = setInterval(this.updateTunnelState, 1000)
     };
 
-    stopTrain = () => { interval = false; return clearInterval(interval) };
+    stopTrain = () => {
+        clearInterval(interval);
+        return interval = false;
+    };
 
     setTunnelContainerStyle = () => ({ minWidth: `${30 * TUNNEL_LENGTH}px`, maxWidth: `${30 * TUNNEL_LENGTH}px` })
 
