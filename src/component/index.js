@@ -59,7 +59,10 @@ class App extends Component {
 
     updateTunnelState = () => this.setState(this.updateStateFromPrevState)
 
-    startTrain = () => interval = setInterval(this.updateTunnelState, 1000);
+    startTrain = () => {
+        if (interval) clearInterval(interval)
+        return interval = setInterval(this.updateTunnelState, 1000)
+    };
 
     stopTrain = () => { interval = false; return clearInterval(interval) };
 
