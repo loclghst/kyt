@@ -71,6 +71,12 @@ class App extends Component {
 
     setTunnelContainerStyle = () => ({ minWidth: `${30 * TUNNEL_LENGTH}px`, maxWidth: `${30 * TUNNEL_LENGTH}px` })
 
+    reset = () => {
+        clearInterval(interval);
+        interval = false;
+        return this.setState(this.resetState);
+    }
+
     render() {
         return (
             <Fragment>
@@ -82,6 +88,7 @@ class App extends Component {
                     </div>
                     <button className="btn btn-success" onClick={this.startTrain}> Start Train</button>
                     <button className="btn btn-danger" onClick={this.stopTrain}> Stop Train</button>
+                    <button className="btn btn-danger" onClick={this.reset}> Reset</button>
                 </div>
             </Fragment>
         )
