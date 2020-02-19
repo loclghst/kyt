@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <title>Train Simulator</title>
+</head>
+
+<style>
+    .tunnel {
+
+        min-width: 30px;
+        max-width: 30px;
+        height: 10px;
+    }
+
+    .container {
+        margin-top: 10px;
+    }
+
+    #container {
+        border: 3px solid red;
+        box-sizing: content-box;
+    }
+
+    .btn {
+        margin-top: 10px;
+        margin-right: 10px;
+    }
+</style>
+
+<body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div class='container'>
+        <div id='container'></div>
+        <button id='startButton' class='btn btn-success'>Start</button>
+        <button id='stopButton' class='btn btn-danger'>Stop</button>
+        <button id='resetButton' class='btn btn-danger'>Reset</button>
+    </div>
+</body>
+
+<script>
+
+    function createTrain(length) {
+        const tempTrain = new Array(length).fill(0);
+
+
+        return tempTrain.map((t, i) => ({ id: i + 1 }));
+    }
+
+    let interval;
+
+    let TUNNEL_LENGTH = 4;
+
+    let TRAIN_LENGTH = 8;
+
+    let TUNNEL_STATE = new Array(TUNNEL_LENGTH).fill(0);
+
+    let TRAIN = createTrain(TRAIN_LENGTH)
+
+    let currentIteration = 0;
+    let totalIterations = TRAIN_LENGTH + TUNNEL_LENGTH;
+
+    function setContainerStyle() {
+        document.getElementById('container').style.minWidth = `${30 * TUNNEL_LENGTH}px`;
+        document.getElementById('container').style.maxWidth = `${30 * TUNNEL_LENGTH}px`;
+    }
+
+    setContainerStyle();
+
+    function createContainer() {
+
+        const innerHTML = [];
+
+        for (let i = 0; i < TUNNEL_LENGTH; i++) {
+            innerHTML.push(`<div id = "container${i}" class="d-inline-flex tunnel"   ></div>`)
+        }
+        document.getElementById('container').innerHTML = innerHTML.join('')
+    }
+
+    createContainer();
+
+    function setContainerHTML() {
+
+        if (currentIteration === totalIterations) {
+            reset(false);
+        }
+
+        if (currentIteration < TRAIN_LENGTH) TUNNEL_STATE.unshift(TRAIN[currentIteration].id);
+        else TUNNEL_STATE.unshift(0);
+
+        const currentState = TUNNEL_STATE.slice(0, TUNNEL_LENGTH);
+
+        currentIteration++;
+
+        currentState.forEach((state, i) => {
+            document.getElementById(`container${i}`).innerHTML = state || null;
+        })
+
+    }
+
+    function startTrain() {
+        if (interval) {
+            clearInterval(interval);
+            interval = false;
+        }
+        return interval = setInterval(setContainerHTML, 1000);
+    }
+
+    function stopTrain() {
+        clearInterval(interval);
+        interval = false;
+    }
+
+    function reset(hardReset = true) {
+        if (hardReset) {
+            clearInterval(interval);
+            interval = false;
+
+        }
+
+        currentIteration = 0;
+        TUNNEL_STATE = new Array(TUNNEL_LENGTH).fill(0);
+
+        createContainer();
+
+        return;
+    }
+
+    document.getElementById('startButton').addEventListener('click', startTrain);
+    document.getElementById('stopButton').addEventListener('click', stopTrain);
+    document.getElementById('resetButton').addEventListener('click', reset);
+</script>
+
+</html>
